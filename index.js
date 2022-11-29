@@ -17,7 +17,7 @@ app.get('/api/notes/:id', async (req, res, next) => {
 });
 
 app.put('/api/notes/:id', async (req, res) => {
-  const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body);
+  const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body, { returnDocument:'after' });
   res.json(updatedNote);
 });
 
