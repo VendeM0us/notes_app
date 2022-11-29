@@ -4,7 +4,7 @@ import Note from './models/note.js';
 const app = express();
 app.use(express.json());
 
-app.post('/', async (req, res) => {
+app.post('/api/notes', async (req, res) => {
   const newNote = req.body.content;
   const isImportant = req.body.important;
 
@@ -24,7 +24,7 @@ app.post('/', async (req, res) => {
   }
 });
 
-app.get('/', async (req, res) => {
+app.get('/api/notes', async (req, res) => {
   const notes = await Note.find({});
   res.json(notes);
 });

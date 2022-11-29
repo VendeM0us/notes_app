@@ -8,7 +8,9 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf dist && cd ../notes/ && yarn build && cp -r dist ../notes_backend"
+    "build:ui": "rm -rf dist && cd ../notes/ && yarn build && cp -r dist ../notes_backend",
+    "deploy": "git add -A && git commit -m \"update repo and deploy\" && git push",
+    "deploy:full": "yarn build:ui && yarn deploy"
   },
   "author": "Mayolito Waje",
   "license": "ISC",
