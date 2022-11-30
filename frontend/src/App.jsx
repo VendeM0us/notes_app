@@ -8,14 +8,14 @@ const Footer = () => {
     color: 'green',
     fontStyle: 'italic',
     fontSize: 16
-  }
+  };
 
   return (
     <div style={footerStyle}>
       <br />
       <em>Note app, Department of Computer Science, University of Helsinki 2022</em>
     </div>
-  )
+  );
 };
 
 const App = () => {
@@ -47,8 +47,8 @@ const App = () => {
     noteService
       .create(noteObject)
       .then(returnedNote => {
-        setNotes(notes.concat(returnedNote))
-        setNewNote('')
+        setNotes(notes.concat(returnedNote));
+        setNewNote('');
       });
   };
 
@@ -57,24 +57,24 @@ const App = () => {
   };
 
   const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id)
-    const changedNote = {...note, important: !note.important }
+    const note = notes.find(n => n.id === id);
+    const changedNote = { ...note, important: !note.important };
 
     noteService
       .update(id, changedNote)
       .then(returnedNote => {
-        setNotes(notes.map(n => n.id !== id ? n : returnedNote))
+        setNotes(notes.map(n => n.id !== id ? n : returnedNote));
       })
-      .catch(error => {
+      .catch(() => {
         setErrormessage(
           `Note '${note.content}' was already removed from the server`
         );
         setTimeout(() => {
-          setErrormessage(null)
+          setErrormessage(null);
         }, 5000);
-        setNotes(notes.filter(n => n.id !== id))
+        setNotes(notes.filter(n => n.id !== id));
       });
-  }
+  };
 
   return (
     <div>
@@ -86,16 +86,16 @@ const App = () => {
         </button>
       </div>
       <ul>
-        {notesToShow.map(note => 
-          <Note key={note.id} 
-          note={note}
-          toggleImportance={() => toggleImportanceOf(note.id)}
-        />
+        {notesToShow.map(note =>
+          <Note key={note.id}
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
+          />
         )}
       </ul>
       <form onSubmit={addNote}>
-          <input value={newNote} onChange={handleNoteChange} />
-          <button type="submit">save</button>
+        <input value={newNote} onChange={handleNoteChange} />
+        <button type="submit">save</button>
       </form>
       <Footer />
     </div>

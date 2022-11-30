@@ -3,14 +3,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const url = process.env.MONGODB_URI
+const url = process.env.MONGODB_URI;
 
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB');
   })
   .catch(error => {
-    console.log("Error connecting to MongoDB: ", error.message);
+    console.log('Error connecting to MongoDB: ', error.message);
   });
 
 const noteSchema = new mongoose.Schema({

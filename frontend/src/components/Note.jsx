@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import './index.css';
 
 const Note = ({ note, toggleImportance }) => {

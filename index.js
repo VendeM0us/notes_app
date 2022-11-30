@@ -23,9 +23,9 @@ app.get('/api/notes/:id', async (req, res, next) => {
 app.put('/api/notes/:id', async (req, res, next) => {
   try {
     const updatedNote = await Note.findByIdAndUpdate(
-      req.params.id, 
-      req.body, 
-      { 
+      req.params.id,
+      req.body,
+      {
         new: true,
         runValidators: true,
         context: 'query'
@@ -61,7 +61,7 @@ app.get('/api/notes', async (req, res) => {
 
 app.use((req, res) => {
   res.status(404).json({
-    message: "Resource Not Found (404)"
+    message: 'Resource Not Found (404)'
   });
 });
 
@@ -85,4 +85,4 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server is listening on port ", PORT));
+app.listen(PORT, () => console.log('Server is listening on port ', PORT));
