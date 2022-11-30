@@ -48,7 +48,7 @@ app.post('/api/notes', async (req, res, next) => {
 
   try {
     const savedNote = await note.save();
-    response.json(savedNote);
+    res.json(savedNote);
   } catch (e) {
     next(e);
   }
