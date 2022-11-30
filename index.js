@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import Note from './models/note.js';
 
@@ -30,7 +30,7 @@ app.put('/api/notes/:id', async (req, res, next) => {
         runValidators: true,
         context: 'query'
       });
-      
+
     res.json(updatedNote);
   } catch (e) {
     next(e);
