@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import Note from './models/note.js';
 
@@ -8,35 +8,49 @@ app.use(express.json());
 app.use(express.static('dist'));
 
 app.get('/api/notes/:id', async (req, res, next) => {
-  const foundNote = await Note.findById(req.params.id);
-  if (!foundNote) {
-    next();
-  } else {
-    res.json(foundNote);
+  try {
+    const foundNote = await Note.findById(req.params.id);
+    if (!foundNote) {
+      next();
+    } else {
+      res.json(foundNote);
+    }
+  } catch (e) {
+    next(e);
   }
 });
 
-app.put('/api/notes/:id', async (req, res) => {
-  const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body, { returnDocument:'after' });
-  res.json(updatedNote);
+app.put('/api/notes/:id', async (req, res, next) => {
+  try {
+    const updatedNote = await Note.findByIdAndUpdate(
+      req.params.id, 
+      req.body, 
+      { 
+        new: true,
+        runValidators: true,
+        context: 'query'
+      });
+      
+    res.json(updatedNote);
+  } catch (e) {
+    next(e);
+  }
 });
 
-app.post('/api/notes', async (req, res) => {
-  const newNote = req.body.content;
+app.post('/api/notes', async (req, res, next) => {
+  const body = req.body;
 
-  if (!newNote) {
-    res.status(400).json({
-      error: "The request body should contain content (string)"
-    })
-  } else {
-    const note = new Note({
-      content: newNote,
-      date: new Date(),
-      important: req.body.important || false,
-    });
-  
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+    date: new Date(),
+  });
+
+  try {
     const savedNote = await note.save();
-    res.status(201).json(savedNote);
+    response.json(savedNote);
+  } catch (e) {
+    next(e);
   }
 });
 
@@ -49,7 +63,26 @@ app.use((req, res) => {
   res.status(404).json({
     message: "Resource Not Found (404)"
   });
-})
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.message);
+
+  if (err.name === 'CastError') {
+    return res.status(400).json({ error: 'malformatted id' });
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).json({ error: err.message });
+  }
+
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.status(500).json({
+    status: 500,
+    error: err.message
+  });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server is listening on port ", PORT));
