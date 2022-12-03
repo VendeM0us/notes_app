@@ -4,42 +4,31 @@ import Note from '../models/note.js';
 const notesRouter = express.Router();
 
 notesRouter.get('/:id', async (req, res, next) => {
-  try {
-    const foundNote = await Note.findById(req.params.id);
-    if (!foundNote) {
-      next();
-    } else {
-      res.json(foundNote);
-    }
-  } catch (e) {
-    next(e);
+  const foundNote = await Note.findById(req.params.id);
+
+  if (!foundNote) {
+    next();
+  } else {
+    res.json(foundNote);
   }
 });
 
 notesRouter.put('/:id', async (req, res, next) => {
-  try {
-    const updatedNote = await Note.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-        context: 'query'
-      });
+  const updatedNote = await Note.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+      context: 'query'
+    });
 
-    res.json(updatedNote);
-  } catch (e) {
-    next(e);
-  }
+  res.json(updatedNote);
 });
 
 notesRouter.delete('/:id', async (req, res, next) => {
-  try {
-    await Note.findByIdAndDelete(req.params.id);
-    res.status(204).send();
-  } catch (e) {
-    next(e);
-  }
+  await Note.findByIdAndDelete(req.params.id);
+  res.status(204).send();
 });
 
 notesRouter.post('/', async (req, res, next) => {
@@ -51,12 +40,8 @@ notesRouter.post('/', async (req, res, next) => {
     date: new Date(),
   });
 
-  try {
-    const savedNote = await note.save();
-    res.json(savedNote);
-  } catch (e) {
-    next(e);
-  }
+  const savedNote = await note.save();
+  res.status(201).json(savedNote);
 });
 
 notesRouter.get('/', async (req, res) => {
