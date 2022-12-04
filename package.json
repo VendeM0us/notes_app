@@ -11,7 +11,8 @@
     "build:ui": "rm -rf dist && cd frontend/ && yarn build && cp -r dist .. && rm -rf dist",
     "deploy": "git add -A && git commit -m \"update repo and deploy\" && git push",
     "deploy:full": "yarn build:ui && yarn deploy",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "author": "Mayolito Waje",
   "license": "ISC",

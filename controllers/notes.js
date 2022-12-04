@@ -6,10 +6,10 @@ const notesRouter = express.Router();
 notesRouter.get('/:id', async (req, res, next) => {
   const foundNote = await Note.findById(req.params.id);
 
-  if (!foundNote) {
-    next();
-  } else {
+  if (foundNote) {
     res.json(foundNote);
+  } else {
+    next();
   }
 });
 
