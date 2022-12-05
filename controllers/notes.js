@@ -52,7 +52,8 @@ notesRouter.post('/', async (req, res) => {
 });
 
 notesRouter.get('/', async (req, res) => {
-  const notes = await Note.find({});
+  const notes = await Note.find({})
+    .populate('user', { username: 1, name: 1 });
   res.json(notes);
 });
 
