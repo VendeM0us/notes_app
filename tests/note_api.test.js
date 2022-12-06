@@ -1,15 +1,44 @@
 import mongoose from 'mongoose';
 import supertest from 'supertest';
+import bcrypt from 'bcrypt';
 import * as helper from './test_helper.js';
 import app from '../app.js';
 import Note from '../models/note.js';
+import User from '../models/user.js';
 
 const api = supertest(app);
+const auth = {};
+
+const loginUser = async (auth) => {
+  const result = await api
+    .post('/api/login')
+    .send({
+      username: 'root',
+      password: 'secretpassword'
+    })
+    .expect(200);
+
+  auth.token = result.body.token;
+};
+
+beforeAll(async () => {
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash('secretpassword', 10);
+  const user = new User({
+    username: 'root',
+    name: 'rootUser',
+    passwordHash,
+  });
+
+  await user.save();
+  await loginUser(auth);
+}, 100000);
 
 beforeEach(async () => {
   await Note.deleteMany({});
   await Note.insertMany(helper.initialNotes);
-});
+}, 100000);
 
 describe('when there is initially some notes saved', () => {
   test('notes are returned as json', async () => {
@@ -17,7 +46,7 @@ describe('when there is initially some notes saved', () => {
       .get('/api/notes')
       .expect(200)
       .expect('Content-Type', /application\/json/);
-  }, 100000);
+  });
 
   test('all notes are returned', async () => {
     const response = await api.get('/api/notes');
@@ -67,6 +96,18 @@ describe('viewing a specific note', () => {
 });
 
 describe('addition of a new note', () => {
+  test('requires token authentication', async () => {
+    const newNote = {
+      content: 'async/await simplifies making async calls',
+      important: true,
+    };
+
+    await api
+      .post('/api/notes')
+      .send(newNote)
+      .expect(401);
+  });
+
   test('a valid note can be added', async () => {
     const newNote = {
       content: 'async/await simplifies making async calls',
@@ -76,6 +117,7 @@ describe('addition of a new note', () => {
     await api
       .post('/api/notes')
       .send(newNote)
+      .auth(auth.token, { type: 'bearer' })
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
@@ -96,6 +138,7 @@ describe('addition of a new note', () => {
     await api
       .post('/api/notes')
       .send(newNote)
+      .auth(auth.token, { type: 'bearer' })
       .expect(400);
 
     const notesAtEnd = await helper.notesInDb();
