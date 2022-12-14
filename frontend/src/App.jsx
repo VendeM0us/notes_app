@@ -4,6 +4,7 @@ import noteService from './services/notes';
 import loginService from './services/login';
 import Notification from './components/Notification';
 import Login from './components/Login';
+import Logout from './components/Logout';
 import AddNote from './components/AddNote';
 
 const Footer = () => {
@@ -30,13 +31,20 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const hook = () => {
+  useEffect(() => {
     noteService
       .getAll()
       .then(initialNotes => setNotes(initialNotes));
-  };
+  }, []);
 
-  useEffect(hook, []);
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      noteService.setToken(user.token);
+    }
+  }, []);
 
   const notesToShow = showAll
     ? notes
@@ -68,6 +76,12 @@ const App = () => {
     try {
       const credentials = { username, password };
       const user = await loginService.login(credentials);
+
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      );
+
+      noteService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
@@ -77,6 +91,13 @@ const App = () => {
         setErrormessage(null);
       }, 5000);
     }
+  };
+
+  const handleLogout = (event) => {
+    event.preventDefault();
+
+    window.localStorage.removeItem('loggedNoteappUser');
+    setUser(null);
   };
 
   const toggleImportanceOf = id => {
@@ -114,7 +135,10 @@ const App = () => {
             onChangePassword={({ target }) => setPassword(target.value)}
           />
           : <div>
-            <p>{user.name} is logged in</p>
+            <Logout
+              onSubmit={handleLogout}
+              user={user}
+            />
             <AddNote
               newNote={newNote}
               onChange={handleNoteChange}
