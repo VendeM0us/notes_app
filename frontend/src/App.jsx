@@ -30,12 +30,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    noteService
-      .getAll()
-      .then(initialNotes => setNotes(initialNotes));
-  }, []);
+  const [loginVisible, setLoginVisible] = useState(false);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser');
@@ -44,6 +39,12 @@ const App = () => {
       setUser(user);
       noteService.setToken(user.token);
     }
+  }, []);
+
+  useEffect(() => {
+    noteService
+      .getAll()
+      .then(initialNotes => setNotes(initialNotes));
   }, []);
 
   const notesToShow = showAll
@@ -120,6 +121,29 @@ const App = () => {
       });
   };
 
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' };
+    const showWhenVisible = { display: loginVisible ? '' : 'none' };
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <Login
+            onSubmit={handleLogin}
+            username={username}
+            password={password}
+            onChangeUsername={({ target }) => setUsername(target.value)}
+            onChangePassword={({ target }) => setPassword(target.value)}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
       <h1>Notes</h1>
@@ -127,13 +151,7 @@ const App = () => {
 
       {
         user === null
-          ? <Login
-            onSubmit={handleLogin}
-            username={username}
-            password={password}
-            onChangeUsername={({ target }) => setUsername(target.value)}
-            onChangePassword={({ target }) => setPassword(target.value)}
-          />
+          ? loginForm()
           : <div>
             <Logout
               onSubmit={handleLogout}
