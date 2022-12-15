@@ -17,7 +17,7 @@ notesRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-notesRouter.put('/:id', async (req, res, next) => {
+notesRouter.patch('/:id', async (req, res, next) => {
   const updatedNote = await Note.findByIdAndUpdate(
     req.params.id,
     req.body,

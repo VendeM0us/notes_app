@@ -103,14 +103,15 @@ const App = () => {
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id);
-    const changedNote = { ...note, important: !note.important };
+    const update = { important: !note.important };
 
     noteService
-      .update(id, changedNote)
+      .update(id, update)
       .then(returnedNote => {
         setNotes(notes.map(n => n.id !== id ? n : returnedNote));
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e);
         setErrormessage(
           `Note '${note.content}' was already removed from the server`
         );
