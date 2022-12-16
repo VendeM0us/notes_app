@@ -25,7 +25,6 @@ const Footer = () => {
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrormessage] = useState(null);
   const [user, setUser] = useState(null);
@@ -52,26 +51,6 @@ const App = () => {
   const notesToShow = showAll
     ? notes
     : notes.filter(note => note.important);
-
-  const addNote = (event) => {
-    event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random() < 0.5,
-    };
-
-    noteService
-      .create(noteObject)
-      .then(returnedNote => {
-        setNotes(notes.concat(returnedNote));
-        setNewNote('');
-      });
-  };
-
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value);
-  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -125,6 +104,14 @@ const App = () => {
       });
   };
 
+  const addNote = (noteObject) => {
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote));
+      });
+  };
+
   const loginForm = () => (
     <Togglable buttonLabel='login'>
       <Login
@@ -134,6 +121,12 @@ const App = () => {
         onChangeUsername={({ target }) => setUsername(target.value)}
         onChangePassword={({ target }) => setPassword(target.value)}
       />
+    </Togglable>
+  );
+
+  const noteForm = () => (
+    <Togglable buttonLabel='new note'>
+      <AddNote createNote={addNote} />
     </Togglable>
   );
 
@@ -150,13 +143,7 @@ const App = () => {
               onSubmit={handleLogout}
               user={user}
             />
-            <Togglable buttonLabel='new note'>
-              <AddNote
-                newNote={newNote}
-                onChange={handleNoteChange}
-                onSubmit={addNote}
-              />
-            </Togglable>
+            {noteForm()}
             <div>
               <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
