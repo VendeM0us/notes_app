@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Note from './components/Note';
 import noteService from './services/notes';
 import Notification from './components/Notification';
@@ -13,6 +13,8 @@ const App = () => {
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrormessage] = useState(null);
   const [user, setUser] = useState(null);
+
+  const noteFormRef = useRef();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser');
@@ -72,6 +74,7 @@ const App = () => {
   };
 
   const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility();
     noteService
       .create(noteObject)
       .then(returnedNote => {
@@ -89,7 +92,7 @@ const App = () => {
   );
 
   const noteForm = () => (
-    <Togglable buttonLabel='new note'>
+    <Togglable buttonLabel='new note' ref={noteFormRef}>
       <AddNote createNote={addNote} />
     </Togglable>
   );
