@@ -1,35 +1,18 @@
 import { useEffect, useState } from 'react';
 import Note from './components/Note';
 import noteService from './services/notes';
-import loginService from './services/login';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import AddNote from './components/AddNote';
-
-const Footer = () => {
-  const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  };
-
-  return (
-    <div style={footerStyle}>
-      <br />
-      <em>Note app, Department of Computer Science, University of Helsinki 2022</em>
-    </div>
-  );
-};
+import Footer from './components/Footer';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrormessage] = useState(null);
   const [user, setUser] = useState(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser');
@@ -48,32 +31,16 @@ const App = () => {
       .then(initialNotes => setNotes(initialNotes));
   }, [user]);
 
+  const handleError = (message) => {
+    setErrormessage(message);
+    setTimeout(() => {
+      setErrormessage(null);
+    }, 5000);
+  };
+
   const notesToShow = showAll
     ? notes
     : notes.filter(note => note.important);
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
-    try {
-      const credentials = { username, password };
-      const user = await loginService.login(credentials);
-
-      window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
-      );
-
-      noteService.setToken(user.token);
-      setUser(user);
-      setUsername('');
-      setPassword('');
-    } catch {
-      setErrormessage('Wrong credentials');
-      setTimeout(() => {
-        setErrormessage(null);
-      }, 5000);
-    }
-  };
 
   const handleLogout = (event) => {
     event.preventDefault();
@@ -115,11 +82,8 @@ const App = () => {
   const loginForm = () => (
     <Togglable buttonLabel='login'>
       <Login
-        onSubmit={handleLogin}
-        username={username}
-        password={password}
-        onChangeUsername={({ target }) => setUsername(target.value)}
-        onChangePassword={({ target }) => setPassword(target.value)}
+        updateUser={(user) => setUser(user)}
+        handleError={handleError}
       />
     </Togglable>
   );

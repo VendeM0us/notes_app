@@ -1,30 +1,59 @@
 /* eslint-disable react/prop-types */
-const Login = ({ onSubmit, username, password, onChangeUsername, onChangePassword }) => (
-  <div>
-    <h2>Login</h2>
+import { useState } from 'react';
+import noteService from '../services/notes.js';
+import loginService from '../services/login.js';
 
-    <form onSubmit={onSubmit}>
-      <div>
-      username
-        <input
-          type='text'
-          value={username}
-          name='Username'
-          onChange={onChangeUsername}
-        />
-      </div>
-      <div>
-      password
-        <input
-          type='password'
-          value={password}
-          name='Password'
-          onChange={onChangePassword}
-        />
-      </div>
-      <button type='submit'>login</button>
-    </form>
-  </div>
-);
+const Login = ({ updateUser, handleError }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    try {
+      const credentials = { username, password };
+      const user = await loginService.login(credentials);
+
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      );
+
+      noteService.setToken(user.token);
+      updateUser(user);
+      setUsername('');
+      setPassword('');
+    } catch {
+      handleError('Wrong credentials');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Login</h2>
+
+      <form onSubmit={handleLogin}>
+        <div>
+        username
+          <input
+            type='text'
+            value={username}
+            name='Username'
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
+        password
+          <input
+            type='password'
+            value={password}
+            name='Password'
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button type='submit'>login</button>
+      </form>
+    </div>
+  );
+};
 
 export default Login;
