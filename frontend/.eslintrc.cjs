@@ -2,32 +2,34 @@ module.exports = {
   'env': {
     'browser': true,
     'es2021': true,
-    'node': true,
-    'jest': true,
+    'jest/globals': true,
   },
   'extends': [
     'eslint:recommended',
+    'plugin:react/recommended'
   ],
   'parserOptions': {
+    'ecmaFeatures': {
+      'jsx': true
+    },
     'ecmaVersion': 'latest',
     'sourceType': 'module',
   },
+  'plugins': [
+    'react', 'jest'
+  ],
   'rules': {
     'indent': [
-      'error',
-      2
+      'error', 2
     ],
     'linebreak-style': [
-      'error',
-      'unix'
+      'error', 'unix'
     ],
     'quotes': [
-      'error',
-      'single'
+      'error', 'single'
     ],
     'semi': [
-      'error',
-      'always'
+      'error', 'always'
     ],
     'eqeqeq': 'error',
     'no-trailing-spaces': 'error',
@@ -35,9 +37,15 @@ module.exports = {
       'error', 'always'
     ],
     'arrow-spacing': [
-      'error', { 'before': true, 'after': true }
+      'error', { 'before': true, 'after': true, }
     ],
     'no-console': 0,
-    'no-unused-vars': ['error', { 'argsIgnorePattern': 'next' }],
+    'react/prop-types': 0,
+    'react/react-in-jsx-scope': 'off'
+  },
+  'settings': {
+    'react': {
+      'version': 'detect'
+    },
   },
 };
