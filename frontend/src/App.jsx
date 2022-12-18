@@ -30,7 +30,16 @@ const App = () => {
 
     noteService
       .getAll()
-      .then(initialNotes => setNotes(initialNotes));
+      .then(initialNotes => setNotes(initialNotes))
+      .catch(() => {
+        setUser(null);
+        window.localStorage.removeItem('loggedNoteappUser');
+
+        setErrormessage('Token is expired or invalid. Please re-login');
+        setTimeout(() => {
+          setErrormessage(null);
+        }, 5000);
+      });
   }, [user]);
 
   const handleError = (message) => {
