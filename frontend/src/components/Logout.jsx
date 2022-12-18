@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
+
 const Logout = ({ user, onSubmit }) => (
   <form onSubmit={onSubmit}>
     <p>
@@ -7,5 +8,10 @@ const Logout = ({ user, onSubmit }) => (
     </p>
   </form>
 );
+
+Logout.propTypes = {
+  user: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired
+};
 
 export default Logout;

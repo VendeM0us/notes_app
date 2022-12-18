@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import './index.css';
 
 const Note = ({ note, toggleImportance }) => {
@@ -11,6 +11,11 @@ const Note = ({ note, toggleImportance }) => {
       <button onClick={toggleImportance}>{label}</button>
     </li>
   );
+};
+
+Note.propTypes = {
+  note: PropTypes.object.isRequired,
+  toggleImportance: PropTypes.func.isRequired
 };
 
 export default Note;

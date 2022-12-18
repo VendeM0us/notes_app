@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const AddNote = ({ createNote }) => {
   const [newNote, setNewNote] = useState('');
@@ -29,6 +29,10 @@ const AddNote = ({ createNote }) => {
       <button type='submit'>save</button>
     </form>
   );
+};
+
+AddNote.propTypes = {
+  createNote: PropTypes.func.isRequired
 };
 
 export default AddNote;

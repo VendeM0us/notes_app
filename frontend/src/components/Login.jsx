@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import noteService from '../services/notes.js';
 import loginService from '../services/login.js';
 
@@ -54,6 +54,11 @@ const Login = ({ updateUser, handleError }) => {
       </form>
     </div>
   );
+};
+
+Login.propTypes = {
+  updateUser: PropTypes.func.isRequired,
+  handleError: PropTypes.func.isRequired
 };
 
 export default Login;
