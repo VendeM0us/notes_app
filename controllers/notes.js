@@ -62,8 +62,6 @@ notesRouter.post('/', async (req, res) => {
 
 notesRouter.get('/', async (req, res) => {
   const loggedUserId = req.decoded.id;
-  console.log(loggedUserId);
-
   const ObjectId = mongoose.Types.ObjectId;
 
   const notes = await Note.find({ user: new ObjectId(loggedUserId) })

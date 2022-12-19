@@ -37,24 +37,36 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await Note.deleteMany({});
-  await Note.insertMany(helper.initialNotes);
+
+  const rootUser = await User.findOne({ username: 'root' });
+  const id = rootUser._id;
+
+  const seedNotes = helper.initialNotes
+    .map((note) => new Note({
+      ...note,
+      user: id,
+    }));
+
+  const promises = seedNotes.map((note) => note.save());
+  await Promise.all(promises);
 }, 100000);
 
 describe('when there is initially some notes saved', () => {
   test('notes are returned as json', async () => {
     await api
       .get('/api/notes')
+      .auth(auth.token, { type: 'bearer' })
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
 
   test('all notes are returned', async () => {
-    const response = await api.get('/api/notes');
+    const response = await api.get('/api/notes').auth(auth.token, { type: 'bearer' });
     expect(response.body).toHaveLength(helper.initialNotes.length);
   });
 
   test('a specific note is within the returned notes', async () => {
-    const response = await api.get('/api/notes');
+    const response = await api.get('/api/notes').auth(auth.token, { type: 'bearer' });
 
     const contents = response.body.map(r => r.content);
     expect(contents).toContain(
@@ -71,6 +83,7 @@ describe('viewing a specific note', () => {
 
     const resultNote = await api
       .get(`/api/notes/${noteToView.id}`)
+      .auth(auth.token, { type: 'bearer' })
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
@@ -78,11 +91,12 @@ describe('viewing a specific note', () => {
     expect(resultNote.body).toEqual(processedNoteToView);
   });
 
-  test('failes with status 404 if note does not exist', async () => {
+  test('fails with status 404 if note does not exist', async () => {
     const nonExistingId = await helper.nonExistingId();
 
     await api
       .get(`/api/notes/${nonExistingId}`)
+      .auth(auth.token, { type: 'bearer' })
       .expect(404);
   });
 
@@ -91,6 +105,7 @@ describe('viewing a specific note', () => {
 
     await api
       .get(`/api/notes/${invalidId}`)
+      .auth(auth.token, { type: 'bearer' })
       .expect(400);
   });
 });
@@ -153,6 +168,7 @@ describe('deletion of a note', () => {
 
     await api
       .delete(`/api/notes/${noteToDelete.id}`)
+      .auth(auth.token, { type: 'bearer' })
       .expect(204);
 
     const notesAtEnd = await helper.notesInDb();
