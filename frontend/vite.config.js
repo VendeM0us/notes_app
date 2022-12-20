@@ -8,9 +8,4 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
   }
-  // server: {
-  //   proxy: {
-  //     '/': 'http://localhost:3001/'
-  //   }
-  // }
 });
