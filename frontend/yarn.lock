@@ -3275,6 +3275,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"frontend@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "frontend@workspace:."
+  dependencies:
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": ^13.4.0
+    "@testing-library/user-event": ^14.4.3
+    "@types/react": ^18.0.24
+    "@types/react-dom": ^18.0.8
+    "@vitejs/plugin-react": ^2.2.0
+    "@vitest/coverage-c8": ^0.26.0
+    axios: ^1.1.3
+    cypress: 7.6.0
+    eslint: ^8.30.0
+    eslint-plugin-cypress: ^2.12.1
+    eslint-plugin-jest: ^27.1.7
+    eslint-plugin-react: ^7.31.11
+    jsdom: ^20.0.3
+    json-server: ^0.17.1
+    prop-types: ^15.8.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    vite: ^3.2.3
+    vitest: ^0.26.0
+  languageName: unknown
+  linkType: soft
+
 "fs-extra@npm:^9.1.0":
   version: 9.1.0
   resolution: "fs-extra@npm:9.1.0"
@@ -4911,33 +4938,6 @@ __metadata:
   checksum: 82149371f8be0c4b9ec2f863cc6509a7fd0fa729929c009f3a58e4eb0c9e4cae9920e8f1f8eb46e7d032fec8fb01bede7f0f41a67eb3553b7b8e14fa53de1dac
   languageName: node
   linkType: hard
-
-"notes@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "notes@workspace:."
-  dependencies:
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": ^13.4.0
-    "@testing-library/user-event": ^14.4.3
-    "@types/react": ^18.0.24
-    "@types/react-dom": ^18.0.8
-    "@vitejs/plugin-react": ^2.2.0
-    "@vitest/coverage-c8": ^0.26.0
-    axios: ^1.1.3
-    cypress: 7.6.0
-    eslint: ^8.30.0
-    eslint-plugin-cypress: ^2.12.1
-    eslint-plugin-jest: ^27.1.7
-    eslint-plugin-react: ^7.31.11
-    jsdom: ^20.0.3
-    json-server: ^0.17.1
-    prop-types: ^15.8.1
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    vite: ^3.2.3
-    vitest: ^0.26.0
-  languageName: unknown
-  linkType: soft
 
 "npm-run-path@npm:^4.0.0":
   version: 4.0.1
