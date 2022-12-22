@@ -5,6 +5,7 @@ import cors from 'cors';
 import loginRouter from './controllers/login.js';
 import notesRouter from './controllers/notes.js';
 import usersRouter from './controllers/users.js';
+import testingRouter from './controllers/test.js';
 import * as middleware from './utils/middleware.js';
 import * as logger from './utils/logger.js';
 import mongoose from 'mongoose';
@@ -28,6 +29,10 @@ app.use(middleware.requestLogger);
 
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
+
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/testing', testingRouter);
+}
 
 app.use(middleware.extractToken);
 app.use(middleware.decodeToken);
